@@ -14,3 +14,4 @@ The MongaDurka API tests a create, read, update and delete API but putting the d
 Notes:
  * Don't forget to configure pycharm to work with our virtualenv!   http://exponential.io/blog/2015/02/10/configure-pycharm-to-use-virtualenv/
  * Added flask_pymongo (for Flask), pymongo for the standalone
+ * How do I .gitignore the .idea/ and flask/ directories? 
