@@ -91,3 +91,5 @@ flask/
 
 # Rope project settings
 .ropeproject
+/flask/
+/.idea/
