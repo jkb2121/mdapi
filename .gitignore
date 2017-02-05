@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Pycharm environment
+.idea
+
 # C extensions
 *.so
 
@@ -81,6 +84,7 @@ celerybeat-schedule
 # virtualenv
 venv/
 ENV/
+flask/
 
 # Spyder project settings
 .spyderproject
