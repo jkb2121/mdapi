@@ -4,7 +4,8 @@ MongaDurka API
 ------
 The MongaDurka API tests a create, read, update and delete API but putting the data into a MongoDB. 
 
-
+Next:
+ * We need to somehow use flask-mongoengine, a convenient ORM for MongoDB  http://docs.mongoengine.org/projects/flask-mongoengine/en/latest/ 
 
 
 

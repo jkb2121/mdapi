@@ -25,7 +25,7 @@ def index():
 @app.route('/ddapi/v1.0/durkadurka', methods=['GET'])
 def get_dds():
     ret = []
-    for dd in mongo.db.dd.find({}, {'durka1' : 1, 'durka2': 1, '_id': 1}):
+    for dd in mongo.db.dd.find({}, {'durka1': 1, 'durka2': 1, '_id': 1}):
         print "DD: {}".format(dd)
         dd['_id'] = str(dd['_id'])
         ret.append(dd)
@@ -39,7 +39,7 @@ def get_dds():
 @app.route('/ddapi/v1.0/durkadurka/<string:dd_id>', methods=['GET'])
 def get_one_dd(dd_id):
     ret = []
-    for dd in mongo.db.dd.find({'_id': ObjectId(dd_id) }, {'durka1' : 1, 'durka2': 1, '_id': 1}):
+    for dd in mongo.db.dd.find({'_id': ObjectId(dd_id)}, {'durka1': 1, 'durka2': 1, '_id': 1}):
         print "DD: {}".format(dd)
         dd['_id'] = str(dd['_id'])
         ret.append(dd)
@@ -90,12 +90,16 @@ def create_dd():
     if not request.json or 'durka1' not in request.json or 'durka2' not in request.json:
         abort(400)
 
-    durka1=request.json['durka1']
-    durka2=request.json['durka2']
+    # Probably want some error checking to make sure what we pass in is OK
+    # durka1 = request.json['durka1']
+    # durka2 = request.json['durka2']
 
-    mongo.db.dd.insert_one(request.json)
+    try:
+        mongo.db.dd.insert_one(request.json)
+        return jsonify({'result': True})
+    except:
+        return jsonify({'result': False})
 
-    return durka2
 
 
 
