@@ -1,21 +1,27 @@
 #!flask/bin/python
 
-from flask import Flask, jsonify, json
-from bson import json_util, ObjectId
+from flask import Flask, jsonify
+from bson import ObjectId
 from flask_pymongo import PyMongo
 from flask import request, abort
-import ast
+
 
 app = Flask(__name__)
 app.config["MONGO_DBNAME"] = "durkadurka"
 mongo = PyMongo(app)
 
 
+#
+# Default route
+#
 @app.route("/")
 def index():
-    return "MurkaDurka Service"
+    return "MurkaDurka API"
 
 
+#
+# Return all DurkaDurkas in the system
+#
 @app.route('/ddapi/v1.0/durkadurka', methods=['GET'])
 def get_dds():
     ret = []
@@ -26,6 +32,10 @@ def get_dds():
 
     return jsonify(ret)
 
+
+#
+# Return a specific DurkaDurka given an id.
+#
 @app.route('/ddapi/v1.0/durkadurka/<string:dd_id>', methods=['GET'])
 def get_one_dd(dd_id):
     ret = []
@@ -37,13 +47,21 @@ def get_one_dd(dd_id):
     return jsonify(ret)
 
 
-
+#
+# Route and Function to delete the DurkaDurka given a DurkaDurka id.
+#
+@app.route('/ddapi/v1.0/durkadurka/<string:dd_id>', methods=['DELETE'])
+def delete_dd(dd_id):
+    try:
+        mongo.db.dd.remove({'_id': ObjectId(dd_id)})
+        return jsonify({'result': True})
+    except:
+        return jsonify({'result': False})
 
 
 #
 # Create a new DurkaDurka by posting it.
 #
-
 @app.route('/ddapi/v1.0/durkadurka', methods=['POST'])
 def create_dd():
     if not request.json or 'durka1' not in request.json or 'durka2' not in request.json:
