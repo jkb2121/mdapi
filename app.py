@@ -1,7 +1,7 @@
 #!flask/bin/python
 
 from flask import Flask, jsonify, json
-from bson import json_util
+from bson import json_util, ObjectId
 from flask_pymongo import PyMongo
 from flask import request, abort
 import ast
@@ -25,6 +25,19 @@ def get_dds():
         ret.append(dd)
 
     return jsonify(ret)
+
+@app.route('/ddapi/v1.0/durkadurka/<string:dd_id>', methods=['GET'])
+def get_one_dd(dd_id):
+    ret = []
+    for dd in mongo.db.dd.find({'_id': ObjectId(dd_id) }, {'durka1' : 1, 'durka2': 1, '_id': 1}):
+        print "DD: {}".format(dd)
+        dd['_id'] = str(dd['_id'])
+        ret.append(dd)
+
+    return jsonify(ret)
+
+
+
 
 
 #
