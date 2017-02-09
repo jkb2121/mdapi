@@ -60,6 +60,29 @@ def delete_dd(dd_id):
 
 
 #
+# Route and Function to Update the DurkaDurka specified by the id
+#
+@app.route('/ddapi/v1.0/durkadurka/<string:dd_id>', methods=['PUT'])
+def update_dd(dd_id):
+    if not request.json or 'durka1' not in request.json or 'durka2' not in request.json:
+        abort(400)
+
+    try:
+        mongo.db.dd.update_one(
+            {'_id': ObjectId(dd_id)},
+            {
+                '$set': {
+                    "durka1": request.json['durka1'],
+                    "durka2": request.json['durka2']
+                }
+            }
+        )
+        return jsonify({'result': True})
+    except:
+        return jsonify({'result': False})
+
+
+#
 # Create a new DurkaDurka by posting it.
 #
 @app.route('/ddapi/v1.0/durkadurka', methods=['POST'])
