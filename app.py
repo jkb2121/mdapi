@@ -21,12 +21,21 @@ class DurkaDurka(DynamicDocument):
     meta = {
         'collection': 'dd'
     }
-    _id = StringField()
+    _id = StringField
     durka1 = StringField()
     durka2 = StringField()
 
     def display(self):
         print "ID: {}, DD1: {}, DD2: {}".format(self._id, self.durka1, self.durka2)
+
+    def setDurka1(self, durka1):
+        self.durka1 = durka1
+        self.save()
+
+    def setDurka2(self, durka2):
+        self.durka2 = durka2
+        self.save()
+
 
 #
 # Default route
@@ -97,17 +106,29 @@ def update_dd(dd_id):
         abort(400)
 
     try:
-        mongo.db.dd.update_one(
-            {'_id': ObjectId(dd_id)},
-            {
-                '$set': {
-                    "durka1": request.json['durka1'],
-                    "durka2": request.json['durka2']
-                }
-            }
-        )
+        d = DurkaDurka.objects.get(_id=ObjectId(dd_id))
+        # mongo.db.dd.update_one(
+        #     {'_id': ObjectId(dd_id)},
+        #     {
+        #         '$set': {
+        #             "durka1": request.json['durka1'],
+        #             "durka2": request.json['durka2']
+        #         }
+        #     }
+        # )
+
+        d._id = dd_id
+        d.durka1 = request.json['durka1']
+        d.durka2 = request.json['durka2']
+        d.save()
+
+        # d.setDurka1(request.json['durka1'])
+        # d.setDurka2(request.json['durka2'])
+
         return jsonify({'result': True})
-    except:
+
+    except Exception as e:
+        print str(e)
         return jsonify({'result': False})
 
 
