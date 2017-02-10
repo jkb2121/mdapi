@@ -81,7 +81,8 @@ def get_one_dd(dd_id):
 @app.route('/ddapi/v1.0/durkadurka/<string:dd_id>', methods=['DELETE'])
 def delete_dd(dd_id):
     try:
-        mongo.db.dd.remove({'_id': ObjectId(dd_id)})
+        # mongo.db.dd.remove({'_id': ObjectId(dd_id)})
+        DurkaDurka.objects(_id=ObjectId(dd_id)).delete()
         return jsonify({'result': True})
     except:
         return jsonify({'result': False})
