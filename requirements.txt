@@ -1,2 +1,3 @@
 flask_pymongo
 pymongo
+flask_mongoengine
