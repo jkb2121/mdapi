@@ -145,12 +145,13 @@ def create_dd():
     # durka2 = request.json['durka2']
 
     try:
-        mongo.db.dd.insert_one(request.json)
+        #mongo.db.dd.insert_one(request.json)
+
+        DurkaDurka(durka1=request.json['durka1'], durka2=request.json['durka2']).save()
+
         return jsonify({'result': True})
     except:
         return jsonify({'result': False})
-
-
 
 
 if __name__ == "__main__":
