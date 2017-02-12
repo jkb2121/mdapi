@@ -1,15 +1,11 @@
 #!flask/bin/python
-
 from flask import Flask, jsonify
-from bson import ObjectId, json_util
-# from flask_pymongo import PyMongo
+from bson import ObjectId
 from flask import request, abort
-from flask_mongoengine import MongoEngine, Document, DynamicDocument
+from flask_mongoengine import MongoEngine, DynamicDocument
 from mongoengine.fields import StringField
 
 app = Flask(__name__)
-#app.config["MONGO_DBNAME"] = "durkadurka"
-# mongo = PyMongo(app)
 app.config['MONGODB_SETTINGS'] = {
     'db': 'durkadurka'
 }
@@ -28,11 +24,11 @@ class DurkaDurka(DynamicDocument):
     def display(self):
         print "ID: {}, DD1: {}, DD2: {}".format(self._id, self.durka1, self.durka2)
 
-    def setDurka1(self, durka1):
+    def set_durka1(self, durka1):
         self.durka1 = durka1
         self.save()
 
-    def setDurka2(self, durka2):
+    def set_durka2(self, durka2):
         self.durka2 = durka2
         self.save()
 
@@ -50,20 +46,11 @@ def index():
 #
 @app.route('/ddapi/v1.0/durkadurka', methods=['GET'])
 def get_dds():
-    # ret = []
-    # for dd in mongo.dd.find({}, {'durka1': 1, 'durka2': 1, '_id': 1}):
-    #     print "DD: {}".format(dd)
-    #     dd['_id'] = str(dd['_id'])
-    #     ret.append(dd)
-    #
-    # return jsonify(ret)
 
     dd = DurkaDurka.objects()
     for d in dd:
-        #print "ID: {}, DD1: {}, DD2: {}".format(d._id, d.durka1, d.durka2)
         d.display()
 
-    # return json_util.dumps(dd._collection_obj.find(dd._query))
     return jsonify(dd)
 
 #
@@ -71,16 +58,7 @@ def get_dds():
 #
 @app.route('/ddapi/v1.0/durkadurka/<string:dd_id>', methods=['GET'])
 def get_one_dd(dd_id):
-    # ret = []
-    # for dd in mongo.db.dd.find({'_id': ObjectId(dd_id)}, {'durka1': 1, 'durka2': 1, '_id': 1}):
-    #     print "DD: {}".format(dd)
-    #     dd['_id'] = str(dd['_id'])
-    #     ret.append(dd)
-    #
-    # return jsonify(ret)
     d = DurkaDurka.objects.get(_id=ObjectId(dd_id))
-    #for d in dd:
-    #print "ID: {}, DD1: {}, DD2: {}".format(d._id, d.durka1, d.durka2)
     d.display()
     return jsonify(d)
 
@@ -90,7 +68,6 @@ def get_one_dd(dd_id):
 @app.route('/ddapi/v1.0/durkadurka/<string:dd_id>', methods=['DELETE'])
 def delete_dd(dd_id):
     try:
-        # mongo.db.dd.remove({'_id': ObjectId(dd_id)})
         DurkaDurka.objects(_id=ObjectId(dd_id)).delete()
         return jsonify({'result': True})
     except:
@@ -107,23 +84,11 @@ def update_dd(dd_id):
 
     try:
         d = DurkaDurka.objects.get(_id=ObjectId(dd_id))
-        # mongo.db.dd.update_one(
-        #     {'_id': ObjectId(dd_id)},
-        #     {
-        #         '$set': {
-        #             "durka1": request.json['durka1'],
-        #             "durka2": request.json['durka2']
-        #         }
-        #     }
-        # )
 
         d._id = dd_id
         d.durka1 = request.json['durka1']
         d.durka2 = request.json['durka2']
         d.save()
-
-        # d.setDurka1(request.json['durka1'])
-        # d.setDurka2(request.json['durka2'])
 
         return jsonify({'result': True})
 
@@ -145,8 +110,6 @@ def create_dd():
     # durka2 = request.json['durka2']
 
     try:
-        #mongo.db.dd.insert_one(request.json)
-
         DurkaDurka(durka1=request.json['durka1'], durka2=request.json['durka2']).save()
 
         return jsonify({'result': True})
@@ -156,4 +119,3 @@ def create_dd():
 
 if __name__ == "__main__":
     app.run(debug=True, threaded=True, port=5001)
-
